@@ -1,0 +1,47 @@
+program: train.py
+method: grid
+name: minigrid_regression_test
+project: minigrid_sweeps
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "minigrid"
+  - ${args}
+parameters:
+  # Sweep defining
+  wandb_sweep_model_and_batches:
+    values:
+      - "FB,BC,all_w_dyna"
+      - "FB,rnd,all_w_dyna"
+      - "FB,all_w_dyna,all_w_dyna"
+      - "DT,DT_BC,DT_all"
+      - "NN,BC,all_w_dyna"
+      - "NN,rnd,all_w_dyna"
+  seed:
+    values: [ 0, 1, 2 ]
+  epochs:
+    value: 1500
+#    value: 1
+  train_rew_eval_num:
+    value: 0
+  final_rew_eval_num:
+    value: 0
+  rew_eval_freq:
+    value: 20
+  dropout:
+    value: 0.1
+  seq_len:
+    value: 10
+  lr:
+    value: "1e-4"
+  data_p:
+    value: 0.25
+  save_best:
+    value: loss
+  state_loss:
+    value: 0.2
+  action_loss:
+    value: 0.2
+  wandb_project:
+    value: "placeholder" # The value is ignored, but needs to be non-zero for logging to happen

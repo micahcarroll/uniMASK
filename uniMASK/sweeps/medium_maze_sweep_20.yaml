@@ -1,0 +1,89 @@
+program: train.py
+method: random
+name: medium_maze_sweeps_20
+project: maze_expl_sweeps
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "maze"
+  - ${args}
+  - "--rnd_suffix"
+  - "-rct"
+  - "--eval_types"
+  - "RC_auto"
+parameters:
+  # Sweep defining
+  wandb_sweep_params:
+    values:
+      - "FB,rnd,BC_RC,BC_RC,"
+      - "FB,BC_RC,BC_RC,BC_RC,"
+      - "FB,BC,BC_RC,BC,"
+      - "FB,RC,BC_RC,RC,"
+      - "DT,DT_BC,DT_all,DT_BC,"
+      - "DT,DT_RC,DT_all,DT_RC,"
+      - "NN,BC,BC_RC,BC,"
+      - "NN,RC,BC_RC,RC,"
+
+  env_spec:
+    value: "medium"
+  horizon:
+    value: 200
+  seq_len:
+    value: 20
+
+  torch_cpus:
+    value: 1
+
+  # Params which affect speed #
+  # Training values
+  epochs:
+    value: 1000
+  train_rew_eval_num:
+    value: 100
+  final_rew_eval_num:
+    value: 1000
+  rew_eval_freq:
+    value: 20
+  # Testing values
+#  epochs:
+#    value: 1
+#  train_rew_eval_num:
+#    value: 1
+#  final_rew_eval_num:
+#    value: 1
+#  rew_eval_freq:
+#    value: 1
+  #############################
+
+  # Searching over
+  lr:
+    distribution: log_uniform_values
+    min: 1e-5
+    max: 1e-3
+  batch_size:
+    values: [50, 100]
+  embed_dim:
+    values: [64, 128]
+  nlayers:
+    values: [2, 3, 4]
+  nheads:
+    values: [8, 16]
+  state_loss:
+    value: 1
+
+  # Fixed values
+  data_prop:
+    value: 0.9
+  seed:
+    distribution: int_uniform
+    min: 0
+    max: 100000
+  save_best:
+    value: "rew"
+#  target_rewards":
+#    value: [ ]
+  reward_scale:
+    value: 1
+  wandb_project:
+    value: "placeholder" # The value is ignored, but needs to be non-zero for logging to happen

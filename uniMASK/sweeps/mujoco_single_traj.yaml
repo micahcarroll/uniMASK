@@ -1,0 +1,40 @@
+
+program: flexiBERT/scripts/train.py
+env : /usr/bin/env
+interpreter: ~/miniconda3/envs/fBERT/bin/python
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "mujoco"
+  - "--env_spec"
+  - "hopper"
+  - "--data_prop"
+  - "0.0001"
+  - "--expert_type"
+  - "medium"
+  - "--rtg_loss"
+  - "0"
+  - "--target_rewards"
+  - "1800"
+  - "3600"
+  - "--lr"
+  - "0.0005"
+  - "-sb"
+  - "-wp"
+  - "mujoco_single_traj_sweep"
+  - ${args}
+method: grid
+parameters:
+   wandb_sweep_model_and_batches:
+      values:
+         - "FB,rnd,all,BC_RC"
+         - "FB,future,all,BC_RC"
+         - "FB,past,all,BC_RC"
+         - "FB,BC,all,BC_RC"
+         - "FB,RC,all,BC_RC"
+         - "FB,all,all,BC_RC"
+         # - "DT,DT_BC,DT_all,DT_all"
+         # - "DT,DT_RC,DT_all,DT_all"
+         - "NN,BC,all,BC_RC"
+         - "NN,RC,all,BC_RC"
