@@ -1,0 +1,16 @@
+[tool.isort]
+profile = "black"
+known_third_party= ["wandb"]  # We might have a wandb folder, which would confuse isort. So explicitly state this here.
+
+[tool.black]
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | decision-transformer-master
+    | d4rl
+  )
+)
+'''

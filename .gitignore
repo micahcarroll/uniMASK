@@ -1,0 +1,17 @@
+.ipynb_checkpoints
+.vscode
+../flexiBERT/.idea
+.eggs
+__pycache__
+*.egg-info
+.DS_Store
+.pytest_cache
+
+ex/
+*.pkl
+**/wandb/
+/flexiBERT/data/datasets/*pkl
+/flexiBERT/data/transformer_runs
+/decision-transformer-master 3/
+/flexiBERT/data/datasets/dqn_replay/
+/d4rl/
