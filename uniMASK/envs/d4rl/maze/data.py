@@ -1,10 +1,10 @@
 import os.path
 
 from uniMASK.data import DATASET_DIR
-from uniMASK.envs.d4rl.mujoco.data import MujocoDataset
+from uniMASK.envs.d4rl.d4rl_data import D4RLDataset
 
 
-class MazeDataset(MujocoDataset):
+class MazeDataset(D4RLDataset):
     @classmethod
     def get_trajs_from_d4rl_dataset(
         cls, env_name, dataset_info, proportion=None, num_trajs=None, used_indices=()
