@@ -13,5 +13,11 @@ setup(
     author="Micah Carroll",
     author_email="mdc@berkeley.edu",
     packages=find_packages(),
-    install_requires=["gym_minigrid", "mujoco-py<2.2,>=2.1"],
+    install_requires=["importlib-metadata<=4.11.3",
+                      "gym_minigrid<=1.0.3", "mujoco-py",
+                      "torch", "matplotlib", "ipywidgets",
+                      "seaborn", "pickle5", "tqdm", "gym<=0.21.0",
+                      "transformers", "pytest",
+                      "wandb", "scipy"
+                      ],
 )
