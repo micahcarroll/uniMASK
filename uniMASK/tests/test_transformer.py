@@ -7,7 +7,7 @@ import pytest
 from uniMASK.batches import Batch, BehaviorCloning, CustomPred, DTActionPred, FuturePred, SpanPred, np, torch, tt
 from uniMASK.envs.base_data import Dataset
 from uniMASK.envs.d4rl.d4rl_data import MUJOCO_GYM_ENV_NAMES
-from uniMASK.envs.d4rl.mujoco.data import MujocoDataset
+from uniMASK.envs.d4rl.maze.data import MazeDataset
 from uniMASK.envs.evaluator import Evaluator
 from uniMASK.envs.minigrid.agents import StochGoalAgent
 from uniMASK.envs.minigrid.data import filter_data_by, get_sa_transition_counter
@@ -21,13 +21,6 @@ from uniMASK.transformer_train import base_model_params, base_training_params, t
 from uniMASK.utils import imdict
 
 # TODO Orr++: can speed up a lot of the overfitting tasks by reducing the embed_dim and num_layers etc.
-
-
-def make_mujoco_env(env_name, max_episode_steps=None):
-    env = gym.make(MUJOCO_GYM_ENV_NAMES[env_name])
-    if max_episode_steps is not None:
-        env._max_episode_steps = max_episode_steps
-    return env
 
 
 def test_basic_overfitting():
@@ -628,27 +621,6 @@ def test_goal_conditioned():
     # Verify this with works with both an overfit goal-conditioned model, and a rnd model
 
 
-@pytest.mark.skipif(os.environ.get("CI") is not None, reason="Mujoco is hard to install in CI")
-def test_mujoco_evals_dont_explode():
-    """This test can't be run on CI because it requires having downloaded the mujoco dataset, which is too large to
-    commit to the repo.
-
-    Checks that simple runs with various settings don't break everything
-    """
-    from uniMASK.envs.d4rl.mujoco.data import MujocoDataset
-
-    horizon = 10  # We make horizon shorter to make this test faster
-    env_name = "hopper"
-    train_data, test_data = MujocoDataset.get_datasets(
-        env_name,
-        {"expert_type": "expert"},
-        prop=0.0001,
-        leave_for_eval=1,
-    )
-    make_env = lambda: make_mujoco_env(env_name, horizon)
-    _test_all_batch_codes(make_env, horizon, seq_len=5, test_data=train_data, train_data=train_data)
-
-
 @pytest.mark.skipif(os.environ.get("CI") is not None, reason="Mujoco data not available in CI")
 def test_maze_evals_dont_explode():
     """This test can't be run on CI because it requires having downloaded the mujoco dataset, which is too large to
@@ -658,7 +630,6 @@ def test_maze_evals_dont_explode():
     """
     from uniMASK.data.datasets.generate_maze2d import make_maze
     from uniMASK.envs.d4rl.d4rl_data import MUJOCO_GYM_ENV_NAMES
-    from uniMASK.envs.d4rl.maze.data import MazeDataset
 
     # We make deterministic dataset of len 49 to not conflict with main dataset
     horizon = 49
@@ -804,23 +775,20 @@ def test_maze_overfitting():
             assert np.allclose(eval_metrics["eval_se_rew"], 0), "Env and policy should be deterministic"
 
 
-@pytest.mark.skipif(os.environ.get("CI") is not None, reason="Mujoco is hard to install in CI")
-def test_mujoco():
+@pytest.mark.skipif(os.environ.get("CI") is not None, reason="Maze is hard to install in CI")
+def test_maze():
     """This test can't be run on CI because it requires having downloaded the mujoco dataset, which is too large to
     commit to the repo.
 
     TODO Orr+: eventually fix by just running this on a small subset of the mujoco data which can be saved
     """
-    from uniMASK.envs.d4rl.mujoco.data import MujocoDataset
+    from uniMASK.envs.d4rl.maze.data import MazeDataset
 
     seq_len = 5
-    env_name = "hopper"
-    train_data, test_data = MujocoDataset.get_datasets(
-        env_name,
-        {"expert_type": "expert"},
-        prop=0.005,
-        leave_for_eval=1,
-    )
+
+    horizon = 9
+    env_name = MUJOCO_GYM_ENV_NAMES["umaze"]
+    train_data, test_data = MazeDataset.get_datasets(env_name, {"horizon": horizon}, prop=0.9, leave_for_eval=1)
 
     # Doing timestep embedding here! (at least for this test it cuts the training time in half, surprisingly)
     loss_weights = {"state": 1, "action": 1, "timestep": np.nan}
@@ -856,7 +824,7 @@ def test_mujoco():
         tp,
     )
     last_loss = trainer.last_eval_metrics[f"{FuturePred.__name__}_total"]
-    assert last_loss < 0.25, last_loss
+    assert last_loss < 0.336, last_loss
 
 
 @pytest.mark.skipif(os.environ.get("CI") is not None, reason="Mujoco is hard to install in CI")
@@ -866,22 +834,19 @@ def test_dt_submodules():
     The above bug informed us that modules that are not added to the DT will not be saved, and should therefore cause
     loaded model behavior to differ between reloads. This test verifies that reloaded models evaluate the same.
     """
-    env_name = "hopper"
+    from uniMASK.data.datasets.generate_maze2d import make_maze
     seed = 0
     seq_len = 5
     rew_eval_num = 2
     max_episode_steps = 1000
     run_name = "test"
-    train_data, test_data = MujocoDataset.get_datasets(
-        env_name,
-        {"expert_type": "medium"},
-        prop=0.005,
-        leave_for_eval=1,
-    )
+    horizon = 9
+    env_name = MUJOCO_GYM_ENV_NAMES["umaze"]
+    train_data, test_data = MazeDataset.get_datasets(env_name, {"horizon": horizon}, prop=0.9, leave_for_eval=1)
     loss_weights = {"state": 0, "action": 1, "rtg": 0}
     batch_params = batch_code_to_params_n_dict(None)["DT_BC"][0]
 
-    make_env = lambda: make_mujoco_env(env_name, max_episode_steps)
+    make_env = lambda: make_maze("maze2d-umaze-v1", horizon, no_rnd=True)
     evaluator = Evaluator(
         make_env,
         rew_eval_num=rew_eval_num,
@@ -936,34 +901,10 @@ def test_dt_submodules():
         tr_1, tr_2 = trainer_names[i], trainer_names[i + 1]
         assert metrics[tr_1] == metrics[tr_2], f"{tr_1} evaluated differently than {tr_2}!"
 
-
-@pytest.mark.skipif(os.environ.get("CI") is not None, reason="Mujoco data not available in CI")
-def test_dataset_formatting():
-    from uniMASK.envs.d4rl.mujoco.data import MujocoDataset
-
-    env_name = "hopper"
-
-    # When selecting a subset of the data, this is done randomly, so need to seed the dataset creation
-    random.seed(0)
-    np.random.seed(0)
-    leave_for_eval = 30
-    dataset = MujocoDataset.create_dataset(env_name, {"expert_type": "expert"}, prop=0.9, leave_for_eval=leave_for_eval)
-    data_to_trajs = dataset.to_trajs()
-
-    random.seed(0)
-    np.random.seed(0)
-    trajs, _, _ = MujocoDataset.get_trajs_from_d4rl_dataset(env_name, {"expert_type": "expert"}, proportion=0.9)
-
-    assert np.all(np.allclose(data_to_trajs[i]["observations"], trajs[i]["obsevations"]) for i in range(len(trajs)))
-    assert np.all(np.allclose(data_to_trajs[i]["rewards"], trajs[i]["rewards"]) for i in range(len(trajs)))
-    assert np.all(np.allclose(data_to_trajs[i]["actions"], trajs[i]["actions"]) for i in range(len(trajs)))
-    # assert data_to_trajs == trajs
-
-
 @pytest.mark.skipif(os.environ.get("CI") is not None, reason="Mujoco data not available in CI")
 def test_dry_runs():
     # TODO: dry run tests for minigrid
-    default_args = "mujoco -ep 2 --num_trajs 1 --rew_eval_freq 1 --rtg_loss 0 -et 3600 --expert_type expert --final_rew_eval_num 0 --embed_dim 8 -K 2 --train_rew_eval_num 2 --nlayers 2 --nheads 2"
+    default_args = "maze -ep 2 --num_trajs 1 --rew_eval_freq 1 --rtg_loss 0 -et 3600 --env_spec medium --final_rew_eval_num 0 --embed_dim 8 -K 2 --train_rew_eval_num 2 --nlayers 2 --nheads 2"
     wandb_sweep_args = [
         # "FB,rnd,all,BC_RC,1",
         # "FB,future,all,BC_RC,1",
