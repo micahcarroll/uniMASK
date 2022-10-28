@@ -37,12 +37,13 @@ You may want to parallelize these runs as above.
 3. Generate the heatmaps from these runs by running `minigrid_heatmap.sh` (no parallelization here).
 
 # File structure
+- `scripts/train.py`: the main script from running uniMASK -- start here.
 - `data/`: where rollouts (`datasets`) and trained models (`transformer_runs`) are stored. 
 - `envs/`: data-handling and evaluation for each supported environment. Currently
-- `scripts/`:
+- `scripts/`: reproducing results from the paper, and running uniMASK in general.
 - `batches.py`: has all data pipeline processing classes (`FactorSeq, TokenSeq, FullTokenSeq, Batch, SubBatch`)
 - `sequences.py`:
-- `trainer.py`:
+- `trainer.py`: the Trainer class handles the training loop for all models.
 - `transformer.py`: contains the transformer model class itself.
 - `transformer_train.py`: interface and config setting for training a transformer, through `Trainer` class.
 - `utils.py`: misc utilities, namely math functions, gpu handling, profiling, etc.
