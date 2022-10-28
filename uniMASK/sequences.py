@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import tensor as tt
 
-import uniMASK.base as bs
+import uniMASK.utils
 from uniMASK.utils import to_numpy
 
 AVG_METRICS = False
@@ -866,7 +866,7 @@ def get_masked_items(items, mask):
         ]
     else:
         raise ValueError("{}".format(items.shape))
-    return masked_items.to(bs.DEVICE)
+    return masked_items.to(uniMASK.utils.DEVICE)
 
 
 def get_accuracy(output_masked, targets_masked):
