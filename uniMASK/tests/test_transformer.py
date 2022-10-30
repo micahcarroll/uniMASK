@@ -19,7 +19,7 @@ from uniMASK.trainer import BCEvalIndicator, Trainer
 from uniMASK.transformer_train import base_model_params, base_training_params, train_from_params
 from uniMASK.utils import imdict
 
-# TODO Orr++: can speed up a lot of the overfitting tasks by reducing the embed_dim and num_layers etc.
+# TODO: can speed up a lot of the overfitting tasks by reducing the embed_dim and num_layers etc.
 
 
 def test_basic_overfitting():
@@ -646,7 +646,7 @@ def test_maze_evals_dont_explode():
 def _test_all_batch_codes(make_env, max_ep_len, seq_len, test_data, train_data):
     """Not actually testing anything except for stuff breaking
 
-    TODO Orr++: this is actually not currently testing all batch codes? Maybe discontinue this if we already have it
+    TODO: this is actually not currently testing all batch codes? Maybe discontinue this if we already have it
      tested in the dry runs?
     """
     # Doing timestep embedding here! (at least for this test it cuts the training time in half, surprisingly)
@@ -779,7 +779,7 @@ def test_maze():
     """This test can't be run on CI because it requires having downloaded the mujoco dataset, which is too large to
     commit to the repo.
 
-    TODO Orr+: eventually fix by just running this on a small subset of the mujoco data which can be saved
+    TODO: eventually fix by just running this on a small subset of the mujoco data which can be saved
     """
     from uniMASK.envs.d4rl.maze.data import MazeDataset
 

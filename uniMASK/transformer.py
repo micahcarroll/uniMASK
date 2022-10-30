@@ -74,7 +74,7 @@ class CustomModel(nn.Module):
     def validate_training_params(tp):
         """Only implemented for DT for now"""
 
-    # TODO: stub of logic for reward-scaling and normalizations
+    # NOTE: stub of logic for reward-scaling and normalizations
     # def pre_forward_data_scaling(self, batch):
     #     """
     #     Transforms the data according to relevant axes: rescales state/action/rtg
@@ -84,7 +84,7 @@ class CustomModel(nn.Module):
     #
     #     if self.state_normalization:
     #         # Normalize (at network time, so don't have to worry about doing it at batch and eval time)
-    #         # TODO: add flag for state normalization, and add state normalization to flexiBiT too
+    #         # TODO: add flag for state normalization, and add state normalization to FB too
     #         # states = (states - self.s_mean) / self.s_std
     #         # actions = (actions - self.a_mean) / self.a_std
     #         # returns_to_go = (returns_to_go - self.rtg_mean) / self.rtg_std
@@ -131,7 +131,7 @@ class FlexiModel(CustomModel, ABC):
         # Dropout probability
         self.dropout = dropout
 
-        # TODO Orr++: have assertion checks that this is consistent with data encountered
+        # TODO: add assertion checks that this is consistent with data encountered
         self.seq_len = seq_len
 
         self.timestep_encoding = timestep_encoding
@@ -229,8 +229,6 @@ class uniMASKModel(FlexiModel):
         return params
 
     def init_weights(self):
-        # TODO: Try He (torch.nn.init.kaiming_uniform) or Xavier (torch.nn.init.xavier_uniform) initialisations
-        # for linear embeddings
         initrange = 0.1
         self.linear_decoder.bias.data.zero_()
         self.linear_decoder.weight.data.uniform_(-initrange, initrange)
@@ -288,8 +286,8 @@ class uniMASKModel(FlexiModel):
         # Transformer encoder
         # [seq_len, batch_size, embedding_dimension]
         # TODO: Figure out whether feeding in masks at this point would be useful too
-        # Currently the network is just learning that the inputs are masked implicitly,
-        # instead of zeroing out the attention outputs explicitly
+        #  Currently the network is just learning that the inputs are masked implicitly,
+        #  instead of zeroing out the attention outputs explicitly
         output = self.transformer_encoder(src)
 
         output = self.linear_decoder(output)
@@ -363,7 +361,7 @@ class FlexiNNModel(FlexiModel):
         # Transformer encoder
         # [seq_len, batch_size, embedding_dimension]
         # TODO: kind of weird that float casting is done here. The type should be set correctly upstream of here.
-        #  the same is happening for the FlexiBiT model
+        #  the same is happening for the FB model
         output = self.model(src.reshape(-1, self.in_dim).float()).reshape(-1, self.seq_len, self.cat_input_dim)
 
         # Returns tensor that is also with shape [batch_size, seq_len, embedding_dimension]
@@ -432,7 +430,6 @@ class DecisionTransformer(CustomModel):
             self.transformer = GPT2Model(config)
             self.embed_timestep = nn.Embedding(max_ep_len, embed_dim)
         else:
-            # TODO Orr+++: double check this is actually doing positional encoding
             self.transformer = GPT2Model(config)
 
         self.embed_return = torch.nn.Linear(self.rtg_dim, embed_dim).to(bs.DEVICE)
@@ -519,8 +516,8 @@ class DecisionTransformer(CustomModel):
         # - we randomize over masking way more
 
         assert batch.__class__ in [DTActionPred, FuturePred]
-        # TODO: figure out a better way that doens't involve mask_nans. Were necessary because at reward evaluation
-        #  time we were passing in nans for timesteps that weren't reached yet
+        # TODO: figure out a better way to do this that doens't involve mask_nans. Were necessary because at reward
+        #  evaluation time we were passing in nans for timesteps that weren't reached yet
         # TODO: check whether cloning the input here is necessary. Otherwise remove
         states_k = [
             batch.get_masked_input_factor(k, mask_nans=True).float().clone().to(bs.DEVICE) for k in self.state_dims
@@ -529,8 +526,8 @@ class DecisionTransformer(CustomModel):
 
         # NOTE: have to do this to make RC_fixed masking scheme. That's because it will automatically copy that
         #  rtg masking scheme to the eval. At t=0, all rtgs except for the first will have never been seen before.
-        #  So they'll be nans. And that fucks things up. And so we change them to something else, but given that they
-        #  come later in the sequence, the model can't even attend to them so it's fine 🤷
+        #  So they'll be nans. And that will mess things up. And so we change them to something else, but given that
+        #  they come later in the sequence, the model can't even attend to them so it's fine 🤷
         rtgs = batch.get_factor("rtg").input.clone().to(bs.DEVICE)
         rtgs[rtgs.isnan()] = MASKED_VALUE  # Checked that this doesn't affect anything
         mask = batch.get_input_mask_for_factor("rtg")
@@ -624,7 +621,6 @@ class DecisionTransformer(CustomModel):
         # last position in the input is the action, so the second to last output will be predicting the last input.
         action_preds = self.predict_action(x[:, -2])
 
-        # TODO maybe make a post-forward function with denormalization
         # De-normalize (this might also help?)
         # state_preds = (state_preds + self.s_mean) * self.s_std
         # action_preds = (action_preds + self.a_mean) * self.a_std
