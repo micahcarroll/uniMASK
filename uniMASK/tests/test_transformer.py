@@ -1,7 +1,6 @@
 import os
 import random
 
-import gym
 import pytest
 
 from uniMASK.batches import Batch, BehaviorCloning, CustomPred, DTActionPred, FuturePred, SpanPred, np, torch, tt
