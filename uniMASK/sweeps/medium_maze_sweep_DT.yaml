@@ -1,36 +1,29 @@
 program: train.py
-method: random
-name: umaze_sweeps_5
-project: maze_expl_sweeps
+method: grid
+name: original_DT
+project: maze_expl_sweeps_reproduce
 command:
   - ${env}
   - ${interpreter}
   - ${program}
   - "maze"
   - ${args}
-  - "--rnd_suffix"
-  - "-rct"
+  - "-te"
   - "--eval_types"
   - "RC_auto"
 parameters:
   # Sweep defining
-  wandb_sweep_model_and_batches:
+  wandb_sweep_params:
     values:
-      - "FB,rnd,BC_RC,BC_RC"
-      - "FB,BC_RC,BC_RC,BC_RC"
-      - "FB,BC,BC_RC,BC"
-      - "FB,RC,BC_RC,RC"
-      - "DT,DT_BC,DT_all,DT_BC"
-      - "DT,DT_RC,DT_all,DT_RC"
-      - "NN,BC,BC_RC,BC"
-      - "NN,RC,BC_RC,RC"
+      - "DT,DT_RC,DT_all,DT_RC,"
+      - "DT,DT_BC,DT_all,DT_BC,"
 
   env_spec:
-    value: "umaze"
+    value: "medium"
   horizon:
-    value: 50
+    value: 200
   seq_len:
-    value: 5
+    values: [5, 10]
 
   torch_cpus:
     value: 1
@@ -38,7 +31,7 @@ parameters:
   # Params which affect speed #
   # Training values
   epochs:
-    value: 1000
+    value: 2000
   train_rew_eval_num:
     value: 100
   final_rew_eval_num:
@@ -58,27 +51,23 @@ parameters:
 
   # Searching over
   lr:
-    distribution: log_uniform_values
-    min: 1e-5
-    max: 1e-2
+    value: 1e-4
   batch_size:
-    values: [50, 100]
+    value: 100
   embed_dim:
-    values: [64, 128]
+    value: 128
   nlayers:
-    values: [2, 3, 4]
+    value: 4
   nheads:
-    values: [8, 16]
+    value: 16
   state_loss:
-    values: [1, 0.5, 0]
+    value: 1
 
   # Fixed values
   data_prop:
     value: 0.9
   seed:
-    distribution: int_uniform
-    min: 0
-    max: 100000
+    values: [10, 11, 12, 13, 14]
   save_best:
     value: "rew"
 #  target_rewards":
