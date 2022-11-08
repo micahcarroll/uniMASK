@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import wandb
 
-import uniMASK.base as bs
+import uniMASK.utils
 from uniMASK.batches import BATCH_TYPES_BY_NAME, Batch
 
 # Maximum batch size the GPU can handle at once
@@ -242,7 +242,7 @@ class Trainer:
         np.random.seed(self.seed)
         torch.manual_seed(self.seed)
 
-        print("Training on {}".format(bs.DEVICE))
+        print("Training on {}".format(uniMASK.utils.DEVICE))
 
         assert self.eval_interval <= self.epochs, "eval_interval should be < epochs"
 
@@ -529,7 +529,7 @@ class Trainer:
             # Getting number of possible sequences from the data
             batch_size = data_source.get_tot_num_possible_seqs(self.seq_len)
 
-            if not bs.LOCAL:
+            if not uniMASK.utils.LOCAL:
                 # if the validation set is small, it's probably good to just resample it multipple times in order
                 # to get multiple different maskings
                 batch_size = max(batch_size, MIN_VALID_BS)

@@ -13,11 +13,10 @@ from IPython.core.display import display
 from PIL import Image
 from scipy.interpolate import splev, splprep
 
-from uniMASK.distributions import Categorical
 from uniMASK.envs.minigrid.agents import StochGoalAgent
 from uniMASK.envs.minigrid.data import r_idx_to_r, rtg_idx_to_rtg
 from uniMASK.envs.minigrid.env import CustomActions, CustomDoorKeyEnv6x6, CustomDoorKeyEnv16x16
-from uniMASK.utils import format_str_to_red
+from uniMASK.utils import format_str_to_red, Categorical
 
 AGENT_DIR_TO_STR = {
     CustomActions.RIGHT: "➡️",

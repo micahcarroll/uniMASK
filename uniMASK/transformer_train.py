@@ -6,7 +6,7 @@ import time
 import numpy as np
 import torch
 
-import uniMASK.base as bs
+import uniMASK.utils
 from uniMASK.trainer import Trainer
 from uniMASK.transformer import STR_TO_MODEL_CLASS
 from uniMASK.utils import imdict
@@ -80,7 +80,7 @@ def train_from_params(
         **mp,
     )
     trainer = Trainer(
-        model=model.to(bs.DEVICE),
+        model=model.to(uniMASK.utils.DEVICE),
         train_evaluator=train_evaluator,
         final_evaluator=final_evaluator,
         extra_config={"dataset_name": dataset_name},
