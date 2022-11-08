@@ -1,4 +1,4 @@
-on: workflow_dispatch
+on: pull_request
 jobs:
   osx_mdp_tests:
     runs-on: macos-latest
