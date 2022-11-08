@@ -52,7 +52,7 @@ def train_from_params(
     """
     Trains a model on the data provided, with the provided model and training parameters
 
-    TODO Orr++: clean up all these different training functions. Why do we have so much complexity? What are best practices?
+    TODO: clean up all these different training functions. Why do we have so much complexity? What are best practices?
     """
     mp, tp = model_params, training_params
     # NOTE: Currently we have deterministic seeding to ensure reproducibility
@@ -70,7 +70,7 @@ def train_from_params(
     )
     max_fact_size = dummy_data.max_factor_size
 
-    # TODO Orr++: add the model class to the model params dict
+    # TODO: add the model class to the model params dict
     model_class = STR_TO_MODEL_CLASS[tp["model_class"]]
     model_class.validate_training_params(tp)
     model = model_class(

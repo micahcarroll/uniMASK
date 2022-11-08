@@ -696,7 +696,7 @@ class FullTokenSeq:
             # NOTE: These operations are quite slow so should only do them only if absolutely necessary
             # NOTE: for now we're padding all the input groups which are smaller than the largest one.
             #  if using stacked inputs this should be equivalent to `out = masked_input_groups[0]`
-            # TODO: we can make this more flexible with new embedding scheme that embeds each factor separately
+            # TODO: we could make this more flexible with new embedding scheme that embeds each factor separately
             padded_input_groups = []
             for group in masked_input_groups:
                 curr_factor_size = group.shape[2]
@@ -782,7 +782,7 @@ class FullTokenSeq:
         Get FullTokenSequence with just a subset of the factors, as defined by loss_weights (which also
         overwrites the loss_weights values)
 
-        # TODO: this is not general, only works with stacked or non-stacked structuings of the input
+        # TODO: this is not general, only works with stacked or non-stacked structurings of the input
         """
         loss_types = {k: self.loss_types[k] for k in input_keys}
         return self.raw_data_to_token_seq(
@@ -796,7 +796,7 @@ class FullTokenSeq:
         """
         Returns new FullTokenSeq instance, with changed input `x_idx`.
 
-        # TODO: this is not general, only works with stacked or non-stacked structuings of the input
+        # TODO: this is not general, only works with stacked or non-stacked structurings of the input
         # TODO: this is a major source of evaluation slowness (probably about 30% of the time is spent on this)
         """
         new_data = self.raw_data
@@ -828,7 +828,7 @@ class FullTokenSeq:
         Returns a copy of the current token sequence with all the inputs shifted back by one, and MISSING_VALUE
         replacing the last timestep.
 
-        # TODO: this is not general, only works with stacked or non-stacked structuings of the input
+        # TODO: this is not general, only works with stacked or non-stacked structurings of the input
         """
         new_data = self.raw_data
         for factor_name, factor_data in new_data.items():

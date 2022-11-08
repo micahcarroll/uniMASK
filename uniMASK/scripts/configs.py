@@ -500,9 +500,10 @@ class MinigridBigConfig(Config):
 
 
 class MujocoConfig(Config):
-    # TODO: make the config information also loadable and saveable (or make the subtrain only depend on training params! this is nicer),
-    #  otherwise impossible to evaluate models post-training on exactly the same subtrain params.
-    # TODO: make a class, and have that be loadable and saveable, instead of having training params and model params. Not sure where we can look at examples of this having been done before. Maybe PPO classes in RLLib or something?
+    # TODO: make the config information also loadable and saveable (or make the subtrain only depend on training params!
+    #  this is nicer), otherwise impossible to evaluate models post-training on exactly the same subtrain params.
+    # TODO: make a class, and have that be loadable and saveable, instead of having training params and model params.
+    #  Not sure where we can look at examples of this having been done before. Maybe PPO classes in RLLib or something?
     loss_type = "l2"
     log_interval = 10
     leave_for_eval = 30

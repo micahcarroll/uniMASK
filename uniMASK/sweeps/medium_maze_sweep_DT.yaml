@@ -1,7 +1,7 @@
 program: train.py
 method: grid
-name: medium_maze_sweeps_all_lens
-project: maze_expl_sweeps
+name: original_DT
+project: maze_expl_sweeps_reproduce
 command:
   - ${env}
   - ${interpreter}
@@ -16,13 +16,14 @@ parameters:
   wandb_sweep_params:
     values:
       - "DT,DT_RC,DT_all,DT_RC,"
+      - "DT,DT_BC,DT_all,DT_BC,"
 
   env_spec:
     value: "medium"
   horizon:
     value: 200
   seq_len:
-    values: [5, 10, 20]
+    values: [5, 10]
 
   torch_cpus:
     value: 1
