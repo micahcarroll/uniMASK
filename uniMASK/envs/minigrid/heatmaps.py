@@ -140,7 +140,7 @@ def generate_row(row, num_trajs, test_data, seeds, test):
     }
     row_data_per_seed = []
     missing_data = []
-    for seed in tqdm(seeds, desc=" seed", position=2, leave=True):
+    for seed in tqdm(seeds, desc=" seed", position=2, leave=False):
         row_data = np.empty(shape=(len(COLS)))
         row_data[:] = np.nan  # nan because the heatmap will render this as a blank.
         # "ft" needs a  different model being loaded for each column, but others don't.
@@ -150,7 +150,7 @@ def generate_row(row, num_trajs, test_data, seeds, test):
             if trainer is None:
                 missing_data.append(f"{get_run_name(row, num_trajs)} seed={seed}")
                 continue
-        for x, col in tqdm(enumerate(COLS), desc=" cols", position=3, leave=True, total=len(COLS)):
+        for x, col in tqdm(enumerate(COLS), desc=" cols", position=3, leave=False, total=len(COLS)):
             # DT can only be evaluated on some cols. On the others, we'll continue (leaving the value as np.nan).
             if "DT" in row:
                 if col in COLS_TO_DT_COLS:
@@ -260,7 +260,7 @@ def generate_data(num_trajs, test_data, seeds, test=False):
     std_data = {}
     variation_data = {}
     missing_data = []
-    for y, row in tqdm(enumerate(ROWS), desc=" rows", position=1, leave=True, total=len(ROWS)):
+    for y, row in tqdm(enumerate(ROWS), desc=" rows", position=1, leave=False, total=len(ROWS)):
         mean_data[row], std_data[row], variation_data[row] = None, None, None
         try:
             mean_data[row], std_data[row], variation_data[row] = generate_row(row, num_trajs, test_data, seeds, test)
@@ -281,7 +281,7 @@ def main(args):
     _, test_data = dataset.split_data(train_prop=0.5, num_val_trajs=1000)
 
     max_variations = {}
-    for num_trajs in tqdm(args.num_trajs, desc=" num trajs", position=0, leave=True):
+    for num_trajs in tqdm(args.num_trajs, desc=" num trajs", position=0, leave=False):
         if args.load:
             with open(f"heatmap_{num_trajs}_data.pkl", "rb") as handle:
                 mean_data, std_data, variation_data = pickle.load(handle)
