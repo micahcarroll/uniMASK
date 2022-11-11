@@ -87,7 +87,7 @@ ROWS_IN_ORDER = [
 BC_TO_PARAMS_N = batch_code_to_params_n_dict({"seq_len": SEQ_LEN})
 
 
-DATA_NAME = f"2000_keyenv16x16_{SEQ_LEN}len"
+DATA_NAME = f"2000_keyenv_{SEQ_LEN}len"
 TEST_DATA_PATH = os.path.join(TEST_DATA_DIR, DATA_NAME)
 
 def get_run_name(row, num_trajs, finetune_col=None):
