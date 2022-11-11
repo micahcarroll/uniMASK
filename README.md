@@ -33,7 +33,6 @@ In each script, the first line (comment) contains an example of how to use GNU P
 
 1. Run the commands found in `minigrid_repro.sh`.
 2. Fine-tune the pre-trained models generated in the previous step by running the commands in `minigrid_ft_repro.sh`.
-You may want to parallelize these runs as above.
 3. Generate the heatmaps from these runs by running `minigrid_heatmap.sh` (no parallelization here).
 
 # File structure
