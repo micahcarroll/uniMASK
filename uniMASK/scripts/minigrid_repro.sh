@@ -1,6 +1,6 @@
 # parallel -k --lb -j 25 -a minigrid_repro.sh --delay 10
 
-# hyperparams inferred from https://wandb.ai/fbert/minigrid_sweeps/sweeps/38rgzey3?workspace=user-orrp
+# hyperparams inferred from sweeps/minigrid.yaml
 
 
 ###############
