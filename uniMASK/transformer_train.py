@@ -6,7 +6,7 @@ import time
 import numpy as np
 import torch
 
-import uniMASK.base as bs
+import uniMASK.utils
 from uniMASK.trainer import Trainer
 from uniMASK.transformer import STR_TO_MODEL_CLASS
 from uniMASK.utils import imdict
@@ -52,7 +52,7 @@ def train_from_params(
     """
     Trains a model on the data provided, with the provided model and training parameters
 
-    TODO Orr++: clean up all these different training functions. Why do we have so much complexity? What are best practices?
+    TODO: clean up all these different training functions. Why do we have so much complexity? What are best practices?
     """
     mp, tp = model_params, training_params
     # NOTE: Currently we have deterministic seeding to ensure reproducibility
@@ -70,7 +70,7 @@ def train_from_params(
     )
     max_fact_size = dummy_data.max_factor_size
 
-    # TODO Orr++: add the model class to the model params dict
+    # TODO: add the model class to the model params dict
     model_class = STR_TO_MODEL_CLASS[tp["model_class"]]
     model_class.validate_training_params(tp)
     model = model_class(
@@ -80,7 +80,7 @@ def train_from_params(
         **mp,
     )
     trainer = Trainer(
-        model=model.to(bs.DEVICE),
+        model=model.to(uniMASK.utils.DEVICE),
         train_evaluator=train_evaluator,
         final_evaluator=final_evaluator,
         extra_config={"dataset_name": dataset_name},

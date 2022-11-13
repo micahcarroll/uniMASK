@@ -1,7 +1,7 @@
 program: train.py
 method: grid
 name: medium_maze_sweeps_all_lens
-project: maze_expl_sweeps
+project: maze_expl_sweeps_reproduce
 command:
   - ${env}
   - ${interpreter}
@@ -30,7 +30,7 @@ parameters:
   horizon:
     value: 200
   seq_len:
-    values: [5, 10, 20]
+    values: [5, 10]
 
   torch_cpus:
     value: 1

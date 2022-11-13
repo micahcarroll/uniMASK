@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import wandb
 
-import uniMASK.base as bs
+import uniMASK.utils
 from uniMASK.batches import BATCH_TYPES_BY_NAME, Batch
 
 # Maximum batch size the GPU can handle at once
@@ -242,7 +242,7 @@ class Trainer:
         np.random.seed(self.seed)
         torch.manual_seed(self.seed)
 
-        print("Training on {}".format(bs.DEVICE))
+        print("Training on {}".format(uniMASK.utils.DEVICE))
 
         assert self.eval_interval <= self.epochs, "eval_interval should be < epochs"
 
@@ -298,7 +298,7 @@ class Trainer:
                 self.print_eval_info(validation_losses, rew_metrics, train_start_time, global_t)
 
                 if self.save_best == "loss":
-                    # TODO Orr++: maybe have save_batch_params which specify which types to pay attention to. This whole section
+                    # TODO: maybe have save_batch_params which specify which types to pay attention to. This whole section
                     #  is kind of hacky
                     # We want to save the best model according to some metric. Here we have some logic to figure out
                     # the relevant metric. To do so, we consider the training batch types.
@@ -316,7 +316,7 @@ class Trainer:
                     if len(matching_eval_type) == 0:
                         # If there's no overlap between the training and validation (e.g. RandomPred training),
                         # consider the total loss across all validation types.
-                        # TODO Orr++, HACK: filters out forwards and backwards losses because they would mess things up
+                        # TODO, HACK: filters out forwards and backwards losses because they would mess things up
                         losses_to_consider = [
                             (name, l)
                             for name, l in validation_losses.items()
@@ -512,7 +512,9 @@ class Trainer:
             return "RC"
         if type(target_rew) is float:
             return f"{float(target_rew):5.2f}"
-        if target_rew == "BC":  # TODO Orr this is a bug and should be fixed upstream!
+        # TODO this is result of a bug (which doesn't affect results) and should be fixed upstream!
+        #  target reward should never be a string
+        if target_rew == "BC":
             return "BC"
         raise NotImplementedError(f"Unexpected target_reward: {target_rew} of type {type(target_rew)}")
 
@@ -527,7 +529,7 @@ class Trainer:
             # Getting number of possible sequences from the data
             batch_size = data_source.get_tot_num_possible_seqs(self.seq_len)
 
-            if not bs.LOCAL:
+            if not uniMASK.utils.LOCAL:
                 # if the validation set is small, it's probably good to just resample it multipple times in order
                 # to get multiple different maskings
                 batch_size = max(batch_size, MIN_VALID_BS)
@@ -581,7 +583,7 @@ class Trainer:
 
             b_class = val_batch_params["type"]
             # Batch size has to be a multiple of this number or everything breaks
-            # TODO Orr+: add this logic to fix the batch size in the batch __init__ itself with a try/catch.
+            # TODO: add this logic to fix the batch size in the batch __init__ itself with a try/catch.
             #  Currently it fixes the size even if not necessary because it can't take into account the batch params
             batch_size_multiple = b_class.must_have_size_multiple_of(eval_data_seqs.seq_len)
 
