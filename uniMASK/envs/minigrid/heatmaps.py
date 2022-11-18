@@ -230,7 +230,7 @@ def make_heatmap(data, output_name, output_format, float_format):
         cmap="viridis_r",
         cbar_kws={"pad": 0.02},
     )
-    s.set_xticklabels(x_labels, size=13)
+    s.set_xticklabels(x_labels, size=11)
     s.set_yticklabels(y_labels, size=10)
     s.axhline(ROWS_IN_ORDER.index("ft") + 1, color="1")
 
@@ -244,7 +244,7 @@ def make_heatmap(data, output_name, output_format, float_format):
         dpi=500,
         bbox_inches="tight",
     )
-    plt.show()
+    # plt.show()
 
 
 def generate_data(num_trajs, test_data, seeds, test=False):
@@ -276,6 +276,11 @@ def generate_data(num_trajs, test_data, seeds, test=False):
 
 def main(args):
     np.random.seed(1)
+
+    if args.no_benchmarks:
+        global ROWS_IN_ORDER, ROWS
+        ROWS_IN_ORDER = [row_name for row_name in ROWS_IN_ORDER if row_name not in BASELINE_ROWS.keys()]
+        ROWS = {k: v for k, v in ROWS.items() if k not in BASELINE_ROWS.keys()}
 
     dataset = Dataset.load(TEST_DATA_PATH)
     _, test_data = dataset.split_data(train_prop=0.5, num_val_trajs=1000)
@@ -334,6 +339,11 @@ if __name__ == "__main__":
         "--eps",
         action="store_true",
         help="Save as a high definition .eps",
+    )
+    parser.add_argument(
+        "--no_benchmarks",
+        action="store_true",
+        help="Omit benchmark rows (DT / NN).",
     )
     # parser.add_argument(
     #     "--err",
