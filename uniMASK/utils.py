@@ -8,7 +8,7 @@ import json
 import os
 import pstats
 import shutil
-from collections import Iterable, OrderedDict, defaultdict, Counter
+from collections import Counter, Iterable, OrderedDict, defaultdict
 from logging import warning
 
 import numpy as np

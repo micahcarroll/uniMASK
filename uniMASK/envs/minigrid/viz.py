@@ -16,7 +16,7 @@ from scipy.interpolate import splev, splprep
 from uniMASK.envs.minigrid.agents import StochGoalAgent
 from uniMASK.envs.minigrid.data import r_idx_to_r, rtg_idx_to_rtg
 from uniMASK.envs.minigrid.env import CustomActions, CustomDoorKeyEnv6x6, CustomDoorKeyEnv16x16
-from uniMASK.utils import format_str_to_red, Categorical
+from uniMASK.utils import Categorical, format_str_to_red
 
 AGENT_DIR_TO_STR = {
     CustomActions.RIGHT: "➡️",

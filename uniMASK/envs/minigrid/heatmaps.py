@@ -113,7 +113,7 @@ def load_trainer_if_found(row, num_trajs, seed, finetune_col=None):
     run_name = get_run_name(row, num_trajs, finetune_col)
     try:
         trainer = Trainer.load(run_name, best=True, seed=seed)
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         print(f"{run_name} with seed {seed} not found.")
     if trainer is not None:
         trainer.model.eval()
