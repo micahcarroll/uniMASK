@@ -38,6 +38,14 @@ In each script, the first line (comment) contains an example of how to use GNU P
 3. Generate the heatmaps from these runs by running `minigrid_heatmap.sh` (no parallelization here).
 4. You may then find the heatmap at uniMASK/scripts.
 
+### Maze2D results
+
+To reproduce the Maze2D table in the paper:
+
+1. Run `wandb` sweeps: `medium_maze_sweep_all.yaml` and `medium_maze_sweep_DT.yaml`
+2. Run finetuning runs: `maze_ft_final.sh`
+3. Parse results with `Parse wandb Maze Experiments.ipynb`
+
 # File structure
 - `scripts/train.py`: the main script from running uniMASK -- start here.
 - `data/`: where rollouts (`datasets`) and trained models (`transformer_runs`) are stored. 
