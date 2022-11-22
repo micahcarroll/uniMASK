@@ -4,6 +4,8 @@ uniMASK is a generalization of BERT models with flexible abstractions for perfor
 sequences. Masking and prediction can occur both on the token level (as in traditional transformer), or even on 
 subportions of tokens.
 
+You can find the full paper [here](https://arxiv.org/abs/2211.10869)
+
 # Getting Started
 To install uniMASK, run:
 
