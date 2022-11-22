@@ -1,3 +1,5 @@
+![Tests](https://github.com/micahcarroll/uniMASK/workflows/.github/workflows/pythontests.yml/badge.svg)
+
 # Introduction 
 
 uniMASK is a generalization of BERT models with flexible abstractions for performing inference on subportions of 
