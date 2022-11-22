@@ -1,4 +1,4 @@
-![Tests](https://github.com/micahcarroll/uniMASK/workflows/.github/workflows/pythontests.yml/badge.svg)
+![Tests](https://github.com/micahcarroll/uniMASK/workflows/.github/workflows/pythontests.yml/badge.svg) [!["Open Issues"](https://img.shields.io/github/issues-raw/micahcarroll/uniMASK.svg)](https://github.com/micahcarroll/uniMASK)
 
 # Introduction 
 
