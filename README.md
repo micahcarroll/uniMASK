@@ -1,5 +1,5 @@
 ![Tests](https://github.com/micahcarroll/uniMASK/workflows/.github/workflows/pythontests.yml/badge.svg) [!["Open Issues"](https://img.shields.io/github/issues-raw/micahcarroll/uniMASK.svg)](https://github.com/micahcarroll/uniMASK)
-[![arXiv](https://img.shields.io/badge/arXiv-2211.10869-bbbbbb.svg)](https://arxiv.org/abs/2211.10869)
+[![arXiv](https://img.shields.io/badge/arXiv-2211.10869-32CD32.svg)](https://arxiv.org/abs/2211.10869)
 
 # Introduction 
 
