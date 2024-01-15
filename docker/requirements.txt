@@ -1,0 +1,16 @@
+cython==0.29.33
+mujoco==2.3.2
+mujoco-py==2.1.2.14
+termcolor
+omegaconf
+gym==0.21.0
+dm-env==1.6
+pandas
+wandb
+moviepy
+imageio
+gdown
+jupyterlab
+matplotlib
+-e git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl
+
